@@ -1,0 +1,5 @@
+.venv
+runs
+services/__pycache__
+dataset.cache
+yolov8n.pt

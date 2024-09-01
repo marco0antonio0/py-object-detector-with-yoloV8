@@ -1,0 +1,13 @@
+train: /home/marco/Documentos/dev/py-object-detector/dataset/train/images
+val: /home/marco/Documentos/dev/py-object-detector/dataset/valid/images
+test: /home/marco/Documentos/dev/py-object-detector/dataset/test/images
+
+nc: 7
+names: ['bolinha', 'brinquedo caro', 'cachorro', 'cenora de brinquedo', 'garrafinha de agua', 'humano', 'racao']
+
+roboflow:
+  workspace: study-la2hh
+  project: teste-2-ja7hr
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/study-la2hh/teste-2-ja7hr/dataset/1
