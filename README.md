@@ -1,4 +1,3 @@
-
 # Projeto de Detecção de Objetos com YOLOv8
 
 Este projeto é uma aplicação de detecção de objetos utilizando o modelo YOLOv8 (You Only Look Once) treinado em um conjunto de dados personalizado. O projeto é modularizado para facilitar a leitura e manutenção do código.
@@ -8,7 +7,7 @@ Este projeto é uma aplicação de detecção de objetos utilizando o modelo YOL
 - **main.py**: Arquivo principal que executa a detecção de objetos em tempo real usando a webcam ou uma câmera IP.
 - **utils.py**: Contém funções utilitárias como `draw_layout`, responsável por desenhar as caixas delimitadoras e rótulos nos frames.
 - **runs/**: Pasta onde os modelos treinados e os resultados são armazenados.
-- **dataset/**: Contém os dados de treinamento e validação do modelo.
+- **dataset/**: Contém os dados de treinamento e validação do modelo que foram gerados apartir de um rotulador de imagem, uma dica, uso o roboflow para gerar esse dataset e cole nesta pasta.
 
 ## Funcionalidades
 
@@ -28,58 +27,81 @@ Você pode instalar as dependências necessárias usando:
 pip install -r requirements.txt
 ```
 
-## Como Usar
+## Passos a Seguir
 
-1. **Treinamento do Modelo**:
+### 1. Acesse o Roboflow e Crie um Projeto de Detecção de Objetos
 
-   Se você deseja treinar um novo modelo, pode usar o comando abaixo. Certifique-se de que o arquivo `dataset.yaml` está configurado corretamente:
+1. Acesse o [Roboflow](https://roboflow.com/) e crie uma conta ou faça login.
+2. Crie um novo projeto e selecione "Object Detection" como o tipo de projeto.
+3. Dê um nome ao seu projeto e clique em "Create Project".
+
+### 2. Selecione e Anote Imagens
+
+1. Faça upload de pelo menos 5 imagens que você deseja rotular para o treinamento.
+2. Clique em "Annotate" para começar a marcar os objetos nas imagens usando caixas delimitadoras ou polígonos.
+3. Certifique-se de que todos os objetos nas imagens estão corretamente anotados.
+
+### 3. Baixe o Dataset no Formato YOLOv8
+
+1. Após concluir a anotação, clique em "Generate" no canto superior direito.
+2. Escolha "YOLOv8" como o formato de exportação.
+3. Baixe o dataset, que incluirá as imagens e um arquivo `data.yaml` necessário para o treinamento.
+
+### 4. Indique o Caminho para `data.yaml` no Script de Treinamento
+
+1. No diretório do seu projeto, abra o script `train.py`.
+2. Defina o caminho para o arquivo `data.yaml` dentro do dataset que você baixou.
+   ```python
+   data = '/caminho/para/seu/dataset/data.yaml'
+   ```
+
+### 5. Especifique os Caminhos Corretos para `[train, val, test]`
+
+1. Dentro do arquivo `data.yaml`, certifique-se de que os caminhos para `train`, `val` e `test` estão corretos.
+2. Ajuste os caminhos, se necessário:
+   ```yaml
+   train: /caminho/para/seu/dataset/train
+   val: /caminho/para/seu/dataset/val
+   test: /caminho/para/seu/dataset/test
+   ```
+
+### 6. Execute o Treinamento do Modelo
+
+1. Abra um terminal ou ambiente de desenvolvimento Python.
+2. Navegue até o diretório que contém o script `train.py`.
+3. Execute o comando de treinamento:
+   ```bash
+   python train.py --data /caminho/para/seu/dataset/data.yaml --epochs 100 --weights yolov8n.pt
+   ```
+
+### 7. Execute o `main.py` para Fazer a Predição em Tempo Real
+
+1. Após o treinamento, crie ou modifique o script `main.py` para realizar predições em tempo real.
+2. Carregue o modelo treinado e execute predições em imagens ou vídeos ao vivo:
 
    ```python
    from ultralytics import YOLO
 
-   model = YOLO('yolov8n.pt')
-   results = model.train(data='dataset/data.yaml', epochs=300, imgsz=640, project='runs/custom_project', name='my_experiment', patience=0)
+   model = YOLO('/caminho/para/seu/modelo/treinado.pt')  # Carregue o modelo treinado
+   results = model.predict(source='video.mp4')  # Execute a predição em um vídeo ou webcam
    ```
 
-2. **Detecção em Tempo Real**:
+### 8. Instale os Requisitos
 
-   Para executar a detecção de objetos em tempo real usando a webcam ou uma câmera IP:
-
-   ```python
-   import cv2
-   from ultralytics import YOLO
-   from utils import draw_layout
-
-   model = YOLO('runs/custom_project/my_experiment17/weights/best.pt')  
-   custom_labels = ['bolinha', 'brinquedo caro', 'cachorro', 'cenora de brinquedo', 'garrafinha de agua', 'humano', 'racao']
-   video_capture = cv2.VideoCapture(0)  # Ou use a URL da câmera IP
-
-   while True:
-       ret, frame = video_capture.read()
-       if not ret:
-           break
-
-       results = model(frame, conf=0.50)
-       boxes = [r.boxes.xyxy.cpu().numpy() for r in results]
-       labels = [f"{custom_labels[int(r.boxes.cls.cpu().numpy()[0])]} {r.boxes.conf.cpu().numpy()[0]:.2f}" for r in results]
-
-       draw_layout(frame, boxes, labels, padding=10)
-       cv2.imshow("Detections", frame)
-
-       if cv2.waitKey(1) & 0xFF == ord('q'):
-           break
-
-   video_capture.release()
-   cv2.destroyAllWindows()
+1. Certifique-se de que todas as dependências estão instaladas antes de executar os scripts de treinamento e predição.
+2. Instale as dependências usando:
+   ```bash
+   pip install -r requirements.txt
    ```
 
-3. **Personalização de Rótulos**:
+## Notas
 
-   Se você deseja alterar os rótulos das classes para algo mais específico, edite a lista `custom_labels`:
+- Certifique-se de que os caminhos estão corretos nos seus scripts.
+- Utilize uma GPU para tempos de treinamento mais rápidos.
 
-   ```python
-   custom_labels = ['racao', 'bolinha', 'brinquedo caro', 'cenora de brinquedo', 'garrafinha de agua', 'humano', 'cachorro']
-   ```
+## Licença
+
+Este projeto está licenciado sob a Licença MIT.
 
 ## Resultados
 

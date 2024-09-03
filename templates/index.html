@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Streams</title>
+    <style>
+        .video-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .video-feed {
+            margin: 10px;
+            border: 2px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Feeds</h1>
+    <div class="video-container">
+        <div class="video-feed">
+            <h3>Câmera Local</h3>
+            <img src="{{ url_for('video_feed_local') }}" alt="Câmera Local">
+        </div>
+        <div class="video-feed">
+            <h3>Câmera IP</h3>
+            <img src="{{ url_for('video_feed_ip') }}" alt="Câmera IP">
+        </div>
+    </div>
+</body>
+</html>
