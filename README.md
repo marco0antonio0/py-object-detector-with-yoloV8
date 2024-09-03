@@ -70,8 +70,9 @@ pip install -r requirements.txt
 1. Abra um terminal ou ambiente de desenvolvimento Python.
 2. Navegue até o diretório que contém o script `train.py`.
 3. Execute o comando de treinamento:
+
    ```bash
-   python train.py --data /caminho/para/seu/dataset/data.yaml --epochs 100 --weights yolov8n.pt
+   python train.py
    ```
 
 ### 7. Execute o `main.py` para Fazer a Predição em Tempo Real
