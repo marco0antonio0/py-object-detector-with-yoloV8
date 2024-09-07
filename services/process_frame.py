@@ -3,7 +3,7 @@ from ultralytics import YOLO
 import time
 import numpy as np
 
-def process_frame(frame, model, custom_labels, conf_threshold=0.50):
+def process_frame(frame, model, custom_labels, conf_threshold=0.20):
     """
     Processa um frame para detectar objetos usando o modelo YOLO.
     
@@ -13,7 +13,7 @@ def process_frame(frame, model, custom_labels, conf_threshold=0.50):
     :param conf_threshold: Limite de confiança para as detecções.
     :return: Listas de caixas delimitadoras, rótulos e confidências.
     """
-    results = model(frame, conf=conf_threshold)
+    results = model.predict(frame, conf=conf_threshold,verbose=False)
     boxes = []
     labels = []
     confs = []
